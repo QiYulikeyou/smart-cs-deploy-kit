@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "帮我把 smart-cs 智能客服部署到我的服务器上，域名是 kefu.example.com，要根域名访问。",
+    "expected": "应提示根域名部署**必须重构建前端**到根路径；给出解压→configure→build_frontend.sh <目标> /→npm install/seed→make_nginx_conf --base-path /→pm2 的有序命令；说明 /api/health 首次需等 5-10 秒。"
+  },
+  {
+    "id": 2,
+    "prompt": "客服部署完了，后台页面打开是空白的，但是接口能通。怎么回事？",
+    "expected": "应判断为「前端资源前缀与 Nginx 部署路径不一致」，给出用 check_env.py 前缀校验项确认 + build_frontend.sh 重建的解法；不应误导去排查后端。"
+  },
+  {
+    "id": 3,
+    "prompt": "部署好了，但机器人回答问题很傻，只会背固定话术。",
+    "expected": "应定位到 llm.api_key 未填或 provider 仍为 offline（config.json），给出 configure.py --api-key ... --provider api 后重启的解法；并可提及 agnes 无 embedding 模型导致检索降级的可能。"
+  }
+]

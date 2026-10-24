@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>智能客服一键部署 · v1.0.0 部署套件</title>
+<meta name="description" content="smart-cs-deploy v1.0.0 部署套件：Fastify 后端 + Vue3 管理后台 + 访客挂件，含脱敏配置模板、Nginx 片段与实测排错记录。">
+<meta name="robots" content="index,follow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23D8402F'/%3E%3Ctext x='16' y='23' font-size='18' font-family='serif' fill='%23F5F1E8' text-anchor='middle'%3E客%3C/text%3E%3C/svg%3E">
+<style>
+  :root{--ink:#08080A;--surf:#101014;--line:#232329;--bone:#F5F1E8;--smoke:#8C8880;--cin:#D8402F;--gold:#C8A05A;--celadon:#6F9E93}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ink);color:var(--bone);
+       font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+       font-size:15px;line-height:1.75;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:960px;margin:0 auto;padding:0 clamp(20px,5vw,48px)}
+  header{padding:clamp(56px,9vw,110px) 0 clamp(32px,5vw,56px);border-bottom:1px solid var(--line)}
+  .seal{width:34px;height:34px;display:grid;place-items:center;background:var(--cin);color:#fff;
+        font-family:"Noto Serif SC",serif;font-size:19px;font-weight:700;margin-bottom:26px}
+  .eyebrow{font-family:Georgia,serif;font-style:italic;font-size:12px;letter-spacing:.2em;color:var(--gold);margin:0 0 18px}
+  h1{font-family:"Noto Serif SC","Songti SC",serif;font-weight:600;font-size:clamp(30px,5.2vw,52px);
+     line-height:1.12;letter-spacing:-.02em;margin:0 0 20px}
+  .lead{color:var(--smoke);font-weight:300;max-width:38em;margin:0 0 30px}
+  .meta{display:flex;flex-wrap:wrap;gap:10px}
+  .tag{font-size:11px;letter-spacing:.12em;color:var(--smoke);border:1px solid var(--line);padding:5px 11px;border-radius:2px}
+  .tag b{color:var(--bone);font-weight:500}
+  section{padding:clamp(40px,6vw,68px) 0;border-bottom:1px solid var(--line)}
+  h2{font-family:"Noto Serif SC",serif;font-size:clamp(20px,2.6vw,27px);font-weight:600;
+     letter-spacing:-.01em;margin:0 0 8px}
+  h2 .n{font-family:Georgia,serif;font-style:italic;font-size:13px;color:var(--gold);margin-right:12px}
+  .note{color:var(--smoke);font-size:13px;font-weight:300;margin:0 0 26px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:10.5px;letter-spacing:.16em;color:var(--smoke);font-weight:500;text-transform:uppercase}
+  td code,code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;
+       background:#15151A;border:1px solid var(--line);padding:1px 6px;border-radius:2px;color:var(--celadon)}
+  .ok{color:var(--celadon)}.warn{color:var(--gold)}.bad{color:var(--cin)}
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+  ol.steps li{counter-increment:s;position:relative;padding:0 0 20px 44px;color:var(--smoke);font-weight:300}
+  ol.steps li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:2px;
+       font-family:Georgia,serif;font-style:italic;font-size:13px;color:var(--gold)}
+  ol.steps b{color:var(--bone);font-weight:500}
+  .pit{display:grid;gap:14px}
+  .pit article{border:1px solid var(--line);background:var(--surf);padding:18px 20px;border-radius:3px}
+  .pit h3{font-family:"Noto Serif SC",serif;font-size:16px;font-weight:600;margin:0 0 8px}
+  .pit p{margin:0;font-size:13.5px;color:var(--smoke);font-weight:300}
+  .pit p b{color:var(--bone);font-weight:500}
+  pre{background:#0D0D11;border:1px solid var(--line);padding:14px 16px;overflow:auto;
+      font-size:12.5px;line-height:1.8;border-radius:3px;color:#C9C4B8;margin:12px 0 0}
+  .links{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+  .btn{display:inline-flex;align-items:center;gap:9px;padding:12px 22px;border-radius:2px;
+       font-size:13px;letter-spacing:.05em;border:1px solid rgba(245,241,232,.22);transition:.3s}
+  .btn:hover{border-color:var(--bone);background:rgba(245,241,232,.05)}
+  .btn--solid{background:var(--cin);border-color:var(--cin);color:#fff}
+  .btn--solid:hover{background:#E4523F}
+  footer{padding:44px 0 60px;color:#4A4842;font-size:11.5px;letter-spacing:.1em;line-height:2}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="seal">客</div>
+  <p class="eyebrow">SMART-CS-DEPLOY / V1.0.0</p>
+  <h1>智能客服一键部署<br>部署套件与实测记录</h1>
+  <p class="lead">
+    把 Fastify 后端、Vue3 管理后台、访客挂件、知识库与派单，装到任意网站或服务器。
+    本页是 <b>v1.0.0</b> 的部署套件落地页：含脱敏配置模板、Nginx 反代片段、嵌入片段，
+    以及四个在真实环境里踩到的坑和对应解法。
+  </p>
+  <div class="meta">
+    <span class="tag">版本 <b>v1.0.0</b></span>
+    <span class="tag">Node <b>≥ 22</b></span>
+    <span class="tag">依赖 <b>5 个纯 JS</b></span>
+    <span class="tag">源码 <b>111 文件</b></span>
+    <span class="tag">存储 <b>sql.js 单文件</b></span>
+  </div>
+</header>
+
+<section>
+  <h2><span class="n">01</span>本机实测结果</h2>
+  <p class="note">以下每一项都在安装后真实执行过，不是文档抄写。</p>
+  <table>
+    <thead><tr><th>环节</th><th>结果</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>Skill 安装</td><td class="ok">通过</td><td><code>SKILL.md</code> 版本 1.0.0，4 个脚本齐全，无同名冲突</td></tr>
+      <tr><td>依赖安装</td><td class="ok">通过</td><td>110 个包 / 15 秒，无编译工具链</td></tr>
+      <tr><td>配置生成</td><td class="ok">通过</td><td><code>configure.py</code> 幂等写入，密钥预览已脱敏</td></tr>
+      <tr><td>服务启动</td><td class="ok">通过</td><td><code>/api/health</code> 200，<code>provider=offline</code></td></tr>
+      <tr><td>数据初始化</td><td class="warn">需注意</td><td>必须在停机时 seed，否则被内存库覆盖（见 03-②）</td></tr>
+      <tr><td>登录鉴权</td><td class="ok">通过</td><td><code>admin/admin123</code> 返回 JWT；无 token 访问知识库 401</td></tr>
+      <tr><td>管理后台</td><td class="ok">通过</td><td>重构建后登录页正常渲染，0 控制台错误</td></tr>
+      <tr><td>访客问答</td><td class="ok">通过</td><td><code>/api/qa/public-chat</code> 返回规则应答</td></tr>
+      <tr><td>语义问答</td><td class="bad">未验证</td><td>未提供 LLM API Key，仅 offline 规则模式</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2><span class="n">02</span>部署步骤</h2>
+  <p class="note">子路径部署（挂现有官网 <code>/cs/</code>）是推荐形态。</p>
+  <ol class="steps">
+    <li><b>解压源码模板</b> —— <code>unzip skill/assets/smart-cs-src.zip</code>，得到 111 个文件的项目目录。</li>
+    <li><b>装依赖</b> —— <code>npm install</code>，只有 5 个纯 JS 依赖。</li>
+    <li><b>生成配置</b> —— <code>configure.py</code> 写入企业档案、挂件文案与 LLM 密钥。</li>
+    <li><b>停机 seed</b> —— 先停服务再 <code>node server/seed.js</code>，这是唯一安全顺序。</li>
+    <li><b>构建前端</b> —— 按部署路径设置 <code>VITE_BASE</code>，前缀错了就是白屏。</li>
+    <li><b>反代与守护</b> —— <code>make_nginx_conf.py</code> 出片段，<code>pm2 start</code> 守护进程。</li>
+    <li><b>验收</b> —— health / 登录 / 鉴权 / 公开问答 / 后台渲染，五项全绿才算交付。</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="n">03</span>四个真实的坑</h2>
+  <p class="note">都是这次装完跑起来才发现的，不是从文档里抄的。</p>
+  <div class="pit">
+    <article>
+      <h3>① 前端资源前缀不匹配 → 白屏</h3>
+      <p>自带 <code>dist</code> 引用 <code>/cs/assets/…</code>。直连 Node 根路径时该路径落到 SPA 兜底，返回 <code>text/html</code>，
+      浏览器报 <b>MIME type of "text/html"</b>。解法：按 <code>/cs/</code> 反代，或 <code>build_frontend.sh &lt;dir&gt; /</code> 重构建。</p>
+    </article>
+    <article>
+      <h3>② seed 必须在服务停止时执行</h3>
+      <p>sql.js 是内存库，服务运行期每次写操作都会 flush 回文件。服务在跑时 seed，种子数据会被下一次写操作
+      <b>覆盖</b>——表现为「seed 成功但登录一直失败、用户表为空」。</p>
+    </article>
+    <article>
+      <h3>③ Windows Git Bash 会吃掉 <code>/cs/</code></h3>
+      <p>MSYS 把 <code>--base-path /cs/</code> 转成 <code>D:/…/PortableGit/cs/</code>，生成的 Nginx 配置直接作废。
+      解法：<code>MSYS_NO_PATHCONV=1</code>，脚本路径改用 Windows 形式。</p>
+    </article>
+    <article>
+      <h3>④ GitHub Pages 跑不了这个后端</h3>
+      <p>Fastify 需要常驻 Node 进程和可写数据库。Pages 是纯静态托管，<b>只能放本页这类文档</b>。
+      要让所有人访问可交互客服，必须换能跑 Node 的宿主。</p>
+    </article>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">04</span>取用</h2>
+  <p class="note">仓库为公开，可直接克隆或下载单个文件。</p>
+  <div class="links">
+    <a class="btn btn--solid" href="https://github.com/QiYulikeyou/smart-cs-deploy-kit">仓库 · main 分支</a>
+    <a class="btn" href="https://github.com/QiYulikeyou/smart-cs-deploy-kit/blob/main/README.md">完整 README</a>
+    <a class="btn" href="https://github.com/alexchang2025/smart-cs-deploy/releases/tag/v1.0.0">上游 v1.0.0</a>
+  </div>
+  <pre>git clone https://github.com/QiYulikeyou/smart-cs-deploy-kit.git
+cp -r smart-cs-deploy-kit/skill ~/.workbuddy-ai/skills/smart-cs-deploy</pre>
+</section>
+
+<footer>
+  smart-cs-deploy-kit · 上游 alexchang2025/smart-cs-deploy v1.0.0 · 上游无 LICENSE，商用前请与作者确认授权<br>
+  本页仅含文档与配置模板，不含任何密钥；<code>deploy/config.json</code> 属实例私有文件，禁止提交。
+</footer>
+
+</div>
+</body>
+</html>

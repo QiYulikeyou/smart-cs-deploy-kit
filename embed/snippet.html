@@ -1,0 +1,22 @@
+<!--
+  智能客服访客挂件 —— 嵌入任意网站
+  ------------------------------------------------------------------
+  1) 把 src 换成本实例的域名 + 部署子路径（示例为子路径 /cs/）
+  2) data-site-token 多站点区分用，单站点留空
+  3) 放在 </body> 前即可；挂件会自己拉 /api/deploy/widget-config 决定外观与文案
+  ------------------------------------------------------------------
+  注意：src 必须指向「后端实际提供 widget.js 的地址」。
+       若前端按 /cs/ 构建、Nginx 又用 proxy_pass 剥了前缀，
+       则这里应写 https://你的域名/cs/widget.js
+-->
+<script
+  src="https://kefu.example.com/cs/widget.js"
+  data-site-token=""
+  defer
+></script>
+
+<!--
+  星砚 AIGC 教学站接入位（等后端有公网地址后替换域名即可）：
+
+  <script src="https://<客服后端域名>/cs/widget.js" data-site-token="xingyan" defer></script>
+-->
